@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% block title %}Methodology — Dental AI{% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="col-12 mb-4">
+    <div class="hero text-center">
+      <h2 class="fw-bold"><i class="bi bi-diagram-3 me-2"></i>Methodology</h2>
+      <p class="lead">How the model was built — step by step</p>
+    </div>
+  </div>
+</div>
+
+<!-- Pipeline steps -->
+<div class="card mb-4">
+  <div class="card-header"><i class="bi bi-list-ol me-2"></i>Project Pipeline</div>
+  <div class="card-body">
+    <div class="row g-3">
+      {% set steps = [
+        ('1', 'bi-search', 'Problem Analysis', 'Multi-class classification of 5 dental conditions from X-ray images'),
+        ('2', 'bi-database', 'Data Collection', '29,597 images across train/val/test splits from Kaggle dental dataset'),
+        ('3', 'bi-tools', 'Data Cleaning', 'Resize to 96×96, normalize to [0,1], verify folder structure and class names'),
+        ('4', 'bi-arrow-left-right', 'Data Splitting', 'Pre-split by dataset: 25,136 train / 2,812 val / 1,649 test'),
+        ('5', 'bi-bar-chart', 'Class Balancing', 'Softened class weights (capped at 5×) + augmentation on training data'),
+        ('6', 'bi-cpu', 'Model Training', '6 architectures trained: MLP, CNN, VGG16, ResNet50, MobileNetV2, EfficientNetB0'),
+        ('7', 'bi-graph-up', 'Evaluation', 'Accuracy/loss curves, confusion matrix, classification report per model'),
+        ('8', 'bi-trophy', 'Model Selection', 'VGG16 selected with 90.33% val accuracy and 0.91 weighted F1'),
+        ('9', 'bi-globe', 'Deployment', 'Flask web app with authentication, prediction, and treatment guidance')
+      ] %}
+      {% for num, icon, title, desc in steps %}
+      <div class="col-md-4">
+        <div class="d-flex align-items-start p-3 bg-light rounded">
+          <span class="badge bg-primary me-3 mt-1" style="min-width:28px; height:28px; line-height:18px;">{{ num }}</span>
+          <div>
+            <h6 class="mb-1"><i class="bi {{ icon }} me-1"></i>{{ title }}</h6>
+            <small class="text-muted">{{ desc }}</small>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Model comparison table -->
+<div class="card mb-4">
+  <div class="card-header"><i class="bi bi-table me-2"></i>Model Comparison Results</div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Rank</th>
+            <th>Model</th>
+            <th>Type</th>
+            <th>Val Accuracy</th>
+            <th>Macro F1</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% set model_data = [
+            (1, 'VGG16',          'Pretrained CNN',  90.33, 0.71, 'best'),
+            (2, 'CNN',            'Custom CNN',       86.34, 0.69, ''),
+            (3, 'MobileNetV2',    'Pretrained CNN',   83.68, 0.64, ''),
+            (4, 'MLP',            'Fully Connected',  72.48, 0.35, ''),
+            (5, 'EfficientNetB0', 'Pretrained CNN',   72.26, 0.35, ''),
+            (6, 'ResNet50',       'Pretrained CNN',   69.77, 0.47, ''),
+          ] %}
+          {% for rank, name, mtype, acc, f1, status in model_data %}
+          <tr {% if status == 'best' %}class="table-success"{% endif %}>
+            <td><strong>#{{ rank }}</strong></td>
+            <td>
+              <strong>{{ name }}</strong>
+              {% if status == 'best' %}
+              <span class="badge bg-success ms-2">Deployed</span>
+              {% endif %}
+            </td>
+            <td><span class="badge bg-secondary">{{ mtype }}</span></td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="progress flex-grow-1" style="height:8px;">
+                  <div class="progress-bar bg-primary" style="width:{{ acc }}%"></div>
+                </div>
+                <small class="fw-bold">{{ acc }}%</small>
+              </div>
+            </td>
+            <td>{{ f1 }}</td>
+            <td>
+              {% if status == 'best' %}
+              <i class="bi bi-check-circle-fill text-success"></i> Best
+              {% else %}
+              <i class="bi bi-dash-circle text-muted"></i>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Training plots -->
+<div class="card mb-4">
+  <div class="card-header"><i class="bi bi-graph-up me-2"></i>Training History Plots</div>
+  <div class="card-body">
+    <div class="row g-3">
+      {% for model_name in ['VGG16', 'CNN', 'MobileNetV2', 'MLP', 'EfficientNetB0', 'ResNet50'] %}
+      <div class="col-md-6">
+        <p class="fw-bold text-center mb-2">{{ model_name }}</p>
+        <img src="{{ url_for('static', filename='plots/' + model_name + '_history.png') }}"
+             class="img-fluid rounded border" alt="{{ model_name }} training history"
+             onerror="this.style.display='none'">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Confusion matrices -->
+<div class="card mb-4">
+  <div class="card-header"><i class="bi bi-grid-3x3 me-2"></i>Confusion Matrices</div>
+  <div class="card-body">
+    <div class="row g-3">
+      {% for model_name in ['VGG16', 'CNN', 'MobileNetV2', 'MLP', 'EfficientNetB0', 'ResNet50'] %}
+      <div class="col-md-6">
+        <p class="fw-bold text-center mb-2">{{ model_name }}</p>
+        <img src="{{ url_for('static', filename='plots/' + model_name + '_confusion_matrix.png') }}"
+             class="img-fluid rounded border" alt="{{ model_name }} confusion matrix"
+             onerror="this.style.display='none'">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Preprocessing details -->
+<div class="card mb-4">
+  <div class="card-header"><i class="bi bi-sliders me-2"></i>Preprocessing & Training Details</div>
+  <div class="card-body">
+    <div class="row g-4">
+      <div class="col-md-6">
+        <h6 class="fw-bold">Image Preprocessing</h6>
+        <ul>
+          <li>Resized to <strong>96 × 96 pixels</strong></li>
+          <li>Normalized to <strong>[0, 1]</strong> range</li>
+          <li>Random horizontal flip</li>
+          <li>Random brightness ± 10%</li>
+          <li>Random contrast adjustment</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h6 class="fw-bold">Training Configuration</h6>
+        <ul>
+          <li>Optimizer: <strong>Adam</strong></li>
+          <li>Loss: <strong>Categorical Cross-Entropy</strong></li>
+          <li>Batch size: <strong>32</strong></li>
+          <li>Phase 1 LR: <strong>1e-3</strong> (head only)</li>
+          <li>Phase 2 LR: <strong>1e-5</strong> (fine-tuning)</li>
+          <li>Early stopping: patience = 5</li>
+          <li>ReduceLROnPlateau: factor = 0.5</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

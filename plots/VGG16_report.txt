@@ -1,0 +1,11 @@
+                precision    recall  f1-score   support
+
+        Cavity       0.18      0.27      0.22        22
+      Fillings       0.87      0.88      0.87       315
+Impacted Tooth       0.53      0.78      0.63        32
+       Implant       0.87      0.88      0.87       104
+        Normal       0.96      0.94      0.95      1176
+
+      accuracy                           0.91      1649
+     macro avg       0.68      0.75      0.71      1649
+  weighted avg       0.92      0.91      0.91      1649

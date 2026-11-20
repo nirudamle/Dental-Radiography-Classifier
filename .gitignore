@@ -1,0 +1,20 @@
+@"
+# Datasets
+dataset/
+*.zip
+*.tar.gz
+
+# Trained models
+models/*.keras
+models/*.h5
+models/*.pkl
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env/
+
+# Jupyter
+.ipynb_checkpoints/
+"@ | Out-File -Encoding utf8 .gitignore

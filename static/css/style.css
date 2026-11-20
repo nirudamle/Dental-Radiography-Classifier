@@ -1,0 +1,64 @@
+:root {
+  --primary: #1a3c5e;
+  --accent:  #2980b9;
+  --light:   #f0f4f8;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+body {
+  background: var(--light);
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* This is the main content area — grows to push footer down */
+.main-content {
+  flex: 1;
+}
+
+/* ── Navbar ─────────────────────────────────────────────────────────────── */
+.navbar { background: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.navbar-brand { font-weight: 700; font-size: 1.3rem; }
+.nav-link:hover { color: #7ecef4 !important; }
+
+/* ── Cards ──────────────────────────────────────────────────────────────── */
+.card { border: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+.card-header { border-radius: 12px 12px 0 0 !important; background: var(--primary); color: rgb(78, 107, 84); font-weight: 600; }
+
+/* ── Auth pages ─────────────────────────────────────────────────────────── */
+.auth-wrapper {
+  min-height: 85vh; display: flex;
+  align-items: center; justify-content: center;
+}
+.auth-card { width: 100%; max-width: 420px; }
+.auth-card .card-header { text-align: center; padding: 1.5rem; font-size: 1.2rem; }
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.btn-primary { background: var(--accent); border-color: var(--accent); }
+.btn-primary:hover { background: var(--primary); border-color: var(--primary); }
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white; border-radius: 16px;
+  padding: 3rem 2rem; margin-bottom: 2rem;
+}
+
+/* ── Predict page ───────────────────────────────────────────────────────── */
+.upload-area {
+  border: 2px dashed #adb5bd; border-radius: 12px;
+  padding: 3rem; text-align: center; cursor: pointer;
+  transition: all 0.3s;
+}
+.upload-area:hover { border-color: var(--accent); background: #e8f4fd; }
+
+/* ── Result page ────────────────────────────────────────────────────────── */
+.confidence-bar { height: 24px; border-radius: 6px; transition: width 0.8s ease; }
+.result-badge { font-size: 1.1rem; padding: 0.5rem 1.2rem; border-radius: 8px; }
+.urgency-high   { background: #fff0f0; border-left: 4px solid #e74c3c; padding: 0.8rem; border-radius: 4px; }
+.urgency-medium { background: #fffbf0; border-left: 4px solid #f39c12; padding: 0.8rem; border-radius: 4px; }
+.urgency-low    { background: #f0fff4; border-left: 4px solid #27ae60; padding: 0.8rem; border-radius: 4px; }
+.urgency-none   { background: #f0fff4; border-left: 4px solid #27ae60; padding: 0.8rem; border-radius: 4px; }
